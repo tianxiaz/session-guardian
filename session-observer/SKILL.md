@@ -72,7 +72,7 @@ DSH 上可跑 `scripts/check_session.mjs` 扫本机会话日志，**机械计数
 
 ```
 ① 停下推进——不继续换皮重试、不假装继续。
-② 委托 context-handoff 写交接：trigger=degradation，在 decisions.尝试过 里写清"试过什么、为什么不行"。
+② 委托 context-handoff 写交接：**先做 §4.2.1 强制同步**（量当前 git HEAD/status/最近改动），从**最新状态**写；trigger=degradation，在 decisions.尝试过 里写清"试过什么、为什么不行"。
 ③ 提议切换会话（提议，不阻塞、不自动中止），并给出新会话开场指令（OPENING_PROMPT）。
 ```
 
