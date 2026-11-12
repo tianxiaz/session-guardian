@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # 安装 session-guardian（session-observer + context-handoff 两个技能）
 # 用法:
-#   ./install.sh [dsh|kimi|doubao|all] [observer|handoff] [--force]
-#   平台默认 all（DSH+Kimi）；observer/handoff 只装其一（默认两个都装）
+#   ./install.sh [dsh|kimi|doubao|codex|all] [observer|handoff] [--force]
+#   平台默认 all（DSH+Kimi+Codex）；observer/handoff 只装其一（默认两个都装）
 #   --force 覆盖已存在（默认跳过不覆盖，避免装重）
 set -euo pipefail
 
@@ -13,7 +13,7 @@ HANDOFF_SRC="$SCRIPT_DIR/context-handoff"
 PLATFORM="all"; WHAT="all"; FORCE=0
 for a in "$@"; do
   case "$a" in
-    dsh|kimi|doubao|all) PLATFORM="$a" ;;
+    dsh|kimi|doubao|codex|all) PLATFORM="$a" ;;
     observer|handoff) WHAT="$a" ;;
     --force|-f) FORCE=1 ;;
   esac
@@ -48,7 +48,8 @@ install_to() {
 case "$PLATFORM" in
   dsh)        install_to "$HOME/.dsh/skills" ;;
   kimi)       install_to "$HOME/.kimi-code/skills" ;;
-  all)        install_to "$HOME/.dsh/skills"; install_to "$HOME/.kimi-code/skills" ;;
+  codex)      install_to "$HOME/.codex/skills" ;;
+  all)        install_to "$HOME/.dsh/skills"; install_to "$HOME/.kimi-code/skills"; install_to "$HOME/.codex/skills" ;;
   doubao)     : ;;
 esac
 
