@@ -1,9 +1,7 @@
-# Codex 规则片段（追加到 ~/.codex/AGENTS.md 末尾）
+# Codex 规则片段（追加到 ~/.codex/rules/default.rules 末尾）
 
-> 依据：`~/.codex/AGENTS.md` 用户级文件存在且有优先级（`~/.codex/AGENTS.override.md` 更高，
-> 若同时存在则 `AGENTS.md` 被忽略）；项目级 `AGENTS.md` 从项目根向下逐层拼接。
-> 预算 `project_doc_max_bytes = 32768` —— 片段要短，别把整个技能塞进来。
-> 来源：`docs/_evidence/批L-上下文交接技能/调研-codex-agents-md.md`（源码为证）。
+> 实测（Codex 0.166.0）：规则文件是 `~/.codex/rules/default.rules`（不是 AGENTS.md）。
+> 片段要短，别把整个技能塞进来。
 
 ---
 

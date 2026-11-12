@@ -1,6 +1,6 @@
 # 适配层 · Codex（OpenAI Codex CLI / IDE / cloud）
 
-> 状态：**未实测**。取证受限，必须如实说明。
+> 状态：**已实测**（Codex CLI 0.166.0）。两条重要修正见 §1.1/§1.2：规则走 `default.rules`、技能目录存在且自动发现。
 
 ## 0. 取证的重要前提（不许当没发生）
 
@@ -44,33 +44,19 @@ find <技能目录> -name '*.sh' -exec chmod 755 {} +   # 脚本需可读+可执
 
 ### 1.1 规则层（推荐承载"触发契约"与铁律）
 
-`AGENTS.md` 的发现与优先级（源码为证）：
+**实测（Codex 0.166.0）**：规则文件是 `~/.codex/rules/default.rules`，**不是 `~/.codex/AGENTS.md`**。
+旧调研（源码为证）曾写 AGENTS.md，实测本机 `~/.codex/` 下是 `rules/default.rules`、无 `AGENTS.md`。
 
-| 项 | 值 |
-|---|---|
-| 文件名优先级 | `AGENTS.override.md` > `AGENTS.md` > `project_doc_fallback_filenames`（默认空） |
-| 用户级 | `~/.codex/AGENTS.md` **存在**；`~/.codex/AGENTS.override.md` 同样存在且优先级更高 |
-| 项目级 | 从项目根**向下到 cwd 逐层采集并全部拼接**（不是覆盖），不越过项目根；根标记默认 `.git` |
-| 预算 | `project_doc_max_bytes = 32768` |
-
-⇒ 把 `AGENTS.snippet.md` 的内容追加到 `~/.codex/AGENTS.md` 末尾。
+⇒ 把 `rules.snippet.md` 的内容追加到 `~/.codex/rules/default.rules` 末尾。
 
 ### 1.2 技能层（本技能本体）
 
-Codex 有顶层 `skills` 字段，**按 `SKILL.md` 路径**配置（源码为证）；另有 `bundled` /
-`include_instructions` / `max_context_tokens`（默认上下文窗口的 2%、上限 10000 token）。
-**`~/.codex/skills/` 这个默认目录是否存在——未找到一手来源，不作断言。**
-所以这里给出**显式配置路径**的写法，不依赖默认目录：
+**实测（Codex 0.166.0）**：`~/.codex/skills/` **确实存在**，结构为 `<技能名>/SKILL.md`（与 DSH 相同），
+**自动发现、无需 config.toml 的 `[skills]` 段**。frontmatter 用 `name` + `description`。
 
-```toml
-# ~/.codex/config.toml
-# ⚠️ 下面的键名**未证实**（官方文档站 403，只有源码为证，源码只证实"按 SKILL.md 路径配置"）。
-#    装好后请用 `codex --help` 或本机配置文档核对**真实键名**后再填。
-[skills]
-<未证实：键名以 codex --help 为准> = ["<技能目录>"]
+```bash
+cp -R <本技能目录> ~/.codex/skills/context-handoff
 ```
-
-**不要照抄上面这一行当可执行配置** —— 它是占位。取证受限情况见本文件顶部 §0。
 
 ## 2. 触发档位
 
@@ -102,7 +88,7 @@ Codex 的 hooks 有 **12 类事件**（源码为证）：`PreToolUse`、`Permiss
 
 ```bash
 codex --help                    # 核对 skills / hooks 相关键名
-cat ~/.codex/AGENTS.md | tail -20   # 确认片段已追加
+cat ~/.codex/rules/default.rules | tail -20   # 确认片段已追加
 # 触发一次压缩，看 PreCompact 的 command hook 是否被调用（在其脚本里写个 touch 探针最直观）
 ```
 
