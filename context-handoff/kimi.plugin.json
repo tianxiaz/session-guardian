@@ -1,0 +1,24 @@
+{
+  "name": "context-handoff",
+  "version": "1.0.0",
+  "description": "上下文交接：把接续必需的事实写进可判绿、可增量更新的 HANDOFF.md，让新会话仅凭它就能接着干。附带会话起点的常驻规则与上下文占用提醒钩子。",
+  "keywords": ["handoff", "context", "session", "checkpoint", "交接", "上下文"],
+  "license": "UNLICENSED",
+
+  "interface": {
+    "displayName": "上下文交接 (context-handoff)",
+    "shortDescription": "换会话/被中断时，让下一个会话无损接续",
+    "longDescription": "在上下文触限、被压缩、被中断之前，把「接续必需的事实」写成结构化 HANDOFF.md（目标/状态/决定/待办/边界/环境/证据/待裁决八节固定字段），并用脚本判据保证：字段不缺、空面判红、未变项逐字保留、可幂等重放。装好后自带两点：①会话起点的常驻规则（提醒在「交付单元完成」这个最佳时机交接，而不是等上下文满了）；②上下文占用越过阈值时自动往上下文里注入一条提醒。",
+    "developerName": "context-handoff contributors"
+  },
+
+  "systemPrompt": "## 上下文交接（context-handoff）常驻规则\n\n本机装有 `context-handoff` 技能。**不要等上下文满了才开始交接**——最优时机是「一个交付单元刚完成」。\n\n### 触发优先级（从最优到最次）\n\n1. **首选**：一个**交付单元**刚完成 → 做阶段交接，并建议用户换会话。\n   交付单元＝三条同时满足：①有可判真假的验收 ②不依赖未完成的半成品 ③已落盘。\n   典型：一个独立功能的设计＋实现、一个 bug 的定位＋修复、一个模块重构、一次数据迁移。\n2. **常规**：每完成一个可验证步骤就刷一次**检查点**（成本约 0.2 秒），防中断丢工作。\n3. **预警**：上下文接近上限、即将/刚被压缩——到这一步已是「不得不」，此时模型已进入长上下文退化区，交接质量会下降。\n4. **应急**：被中断、限流、配额、压缩失败等。\n\n### 三个容易做错的点\n\n- **别在交付单元中途做「完整交接」并换会话**：带半成品，接续方要先猜你做到哪，比不换更差。中途只做轻量检查点。\n- **压缩之后必须重建落地**：把交接物里的「已完成」逐条当**未验证**，用实测核对，不要因摘要写着完成就跳过。\n- **怀疑自己在重复同一手段**（连续 2 次失败还没换思路）时：停下，把「试过什么、为什么不行」写进交接物的 `decisions.尝试过`，然后交接，别继续换皮重试。\n\n### 动手前探一句（不要替用户决定）\n\n准备开始下一步之前问自己：「我接下来要做的事，是不是和刚做完的是同一个交付单元？」\n若不是，先做阶段交接并判绿，然后**向用户报告**：当前单元已完成（附验收）、交接物已判绿、下一步属于新单元、建议换会话。\n\n三条硬约束：**不自动中止**（你结束不了会话，只能停下并交回决定权，别写成「已切换」）、**不阻塞**（用户说继续就照常做，不重复唠叨）、**不以占用率高低为理由**提议换会话（依据是单元边界）。\n\n### 怎么做\n\n产物是工作区根目录的 `HANDOFF.md`。首次用 `init` 建骨架，之后一律用 `next` **增量**更新（只声明真正变化的 1–2 个节，未变节由工具逐字搬运）。落盘前必须判绿：\n\n```\nnode \"${KIMI_PLUGIN_ROOT}/scripts/check_handoff.mjs\" check ./HANDOFF.md\n```\n\n退出码 `0`=绿、`2`=判红（字段缺失/空面/漂移）、`3`=用法错、`4`=并发冲突。**红就不许往下走。**\n\n`provenance.trigger` 必须如实记录触发来源（`checkpoint`/`phase-complete`/`context-pressure`/`pre-compact`/`post-compact`/`degradation`/`interruption`/`error-recovery`/`compaction-failed`/`round-limit`/`budget-quota`/`user-request`/`peer-request`/`device-switch`/`model-switch`/`self-estimate`）——**不许把自估伪装成外部阈值**。\n\n**能力边界（不许对外承诺「无损」）**：上一个检查点之前的工作可无损接续；检查点之后到中断之间的工作**可能丢失**。假死/被 kill/超时/崩溃这些在模型侧不可观测，谁也承诺不了「一定接得上」。",
+
+  "hooks": [
+    {
+      "event": "UserPromptSubmit",
+      "command": "bash -lc 'bash \"${KIMI_PLUGIN_ROOT}/adapters/kimi-doubao/kimi_remind.sh\"'",
+      "timeout": 10
+    }
+  ]
+}

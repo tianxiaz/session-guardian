@@ -1,0 +1,5 @@
+.DS_Store
+*.zstd
+*.log
+.dsh-uploads/
+node_modules/

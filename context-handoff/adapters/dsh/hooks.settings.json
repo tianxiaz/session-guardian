@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '上下文交接技能已就位：长任务接近上限时请做一次增量交接（context-handoff）。'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -lc 'node \"${DSH_HOME:-$HOME/.dsh}/skills/context-handoff/scripts/check_handoff.mjs\" measure --json 2>/dev/null | head -c 400'",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
