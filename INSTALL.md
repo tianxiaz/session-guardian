@@ -64,7 +64,20 @@ node ~/.dsh/skills/session-observer/scripts/check_session.mjs \
 
 ---
 
-## 4. 卸载
+## 4. Codex
+
+```bash
+./install.sh codex        # 装两个技能到 ~/.codex/skills/
+```
+
+- 规则：把 `session-observer/adapters/codex/rules.snippet.md` + `context-handoff/adapters/codex/rules.snippet.md` 追加到 `~/.codex/rules/default.rules`（**不是 AGENTS.md**）。
+- 自动发现，无需 config.toml 的 `[skills]` 段。
+- **技术小白 / GitHub 被挡**：用离线包 `session-guardian-codex.zip`（双击 `install.command`，不联网、不经 Codex 沙箱）。详见 `session-observer/adapters/codex/README.md`。
+- 验证：会话里说「**观察**」→ 应回能力卡。
+
+---
+
+## 5. 卸载
 
 ```bash
 rm -rf ~/.dsh/skills/session-observer
@@ -74,7 +87,7 @@ rm -rf ~/.kimi-code/skills/session-observer
 
 ---
 
-## 5. 常见问题
+## 6. 常见问题
 
 | 问题 | 处理 |
 |---|---|
