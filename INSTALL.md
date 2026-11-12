@@ -96,3 +96,4 @@ rm -rf ~/.kimi-code/skills/session-observer
 | 想看全部命令 | 说「**观察帮助**」 |
 | Kimi/豆包能否程序化建定时器 | 标「需实测」，见对应 adapters 的 README |
 | 交接物显示"过期" | observer 在切换前**重新生成**，不复用旧文件；恢复侧核对 `git rev-parse HEAD` 与 `status.恢复检查点` |
+| **旧会话里说「观察」没反应/报错** | 旧会话是安装前开的，**没加载技能**（会话级快照，装完不会回灌）。**开新会话**才认；旧会话只能用手动交接：`context-handoff/templates/fallback-handoff-prompt.md` |

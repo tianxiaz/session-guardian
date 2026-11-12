@@ -67,4 +67,6 @@ case "$PLATFORM" in
   doubao|all) echo "ℹ️  豆包：云端技能，请按 session-observer/adapters/doubao/README.md 在「豆包工作」上传安装。" ;;
 esac
 
+echo "⚠️  装之前就开着的旧会话看不到新技能（会话级加载，不会回灌）。"
+echo "    旧会话请开新的；实在要在旧会话交接，用 context-handoff/templates/fallback-handoff-prompt.md 粘贴。"
 echo "完成。使用见 README.md / INSTALL.md；DSH 常驻入口见 session-observer/adapters/dsh/AGENTS.snippet.md。"
