@@ -59,6 +59,15 @@ cd session-guardian
 - **Kimi/豆包/Codex＝软档**：模型对照特征清单自觉（存在"衰退模型自查衰退"的循环风险，诚实声明）。
 - **Codex**：技能目录 `~/.codex/skills/<name>/SKILL.md`，规则 `~/.codex/rules/default.rules`（不是 AGENTS.md），自动发现；有 **PreCompact hook** 可选（DSH 没有）。见 `session-observer/adapters/codex/README.md`。
 
+## 旧会话 / 没装技能时的兜底
+
+技能是**会话级加载**的：装之前就开着的会话，看不到新技能（只能开新会话）。
+这种"救不回来"的旧会话，用「**手动交接 prompt**」兜底：
+
+- 文件：`context-handoff/templates/fallback-handoff-prompt.md`
+- 用法：旧会话发第 1 段（让它写交接）→ 开新会话发第 2 段（贴交接，继续干）
+- 不需要装任何技能，Kimi / 豆包 / 别的 AI 也能用。
+
 ## 目录结构
 
 ```
