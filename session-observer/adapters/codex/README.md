@@ -41,6 +41,22 @@ cp -R context-handoff   ~/.codex/skills/context-handoff
 > 仓库根目录的 `install-codex.command` 是「联网版」（从 GitHub 下载）；离线 zip 是「无网版」。GitHub 能访问用前者，被墙就用后者。离线 zip 可用
 > `zip -r session-guardian-codex.zip session-observer context-handoff install.command` 自行打包。
 
+### 1.2 ⚠️ Codex app 的托管沙箱会隔离技能（实测，重要）
+
+如果你用 **Codex 桌面 app（不是 CLI）**，注意：app 的 agent 跑在**托管沙箱**里，host 的 `~/.codex/skills/` 对它**不可读**——技能"广告"出来了，但读不到文件，表现为「没检测到技能」。
+
+这是 openai/codex 的已知 issue：**#45802「automatically selected system skill is advertised but unreadable inside managed task sandbox」**。
+
+**实测现象（2026-11-12，MacBook Air）**：
+- 终端里双击 `install.command` 显示「✅ 安装完成」（host 文件系统写入成功）；
+- 但 app 会话里说「没检测到会话效能观察技能」；
+- agent 的交接文档确认 `~/.codex/skills/session-observer` 在 app 视角里**不存在**。
+
+**结论**：**Codex app（沙箱模式）不支持本地技能**，别在这上面折腾。想要"自动观察/切换"：
+1. 用 **Codex CLI**（非沙箱；已验证 `~/.codex/skills/` 可读）；或
+2. 换 **Kimi / DSH**；或
+3. 用**手动兜底 prompt**（`context-handoff/templates/fallback-handoff-prompt.md`），任何 AI 都能用、零安装。
+
 ## 2. 常驻入口（规则）
 
 把 `rules.snippet.md` 的内容追加到 `~/.codex/rules/default.rules` 末尾。
