@@ -45,11 +45,21 @@ install_to() {
   fi
 }
 
+# Codex 只认 name + description，剥掉 DSH 专属的 whenToUse 字段
+strip_when_to_use() {
+  local skills="$1"
+  for f in "$skills/session-observer/SKILL.md" "$skills/context-handoff/SKILL.md"; do
+    if [ -f "$f" ] && grep -q '^whenToUse:' "$f" 2>/dev/null; then
+      grep -v '^whenToUse:' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
+    fi
+  done
+}
+
 case "$PLATFORM" in
   dsh)        install_to "$HOME/.dsh/skills" ;;
   kimi)       install_to "$HOME/.kimi-code/skills" ;;
-  codex)      install_to "$HOME/.codex/skills" ;;
-  all)        install_to "$HOME/.dsh/skills"; install_to "$HOME/.kimi-code/skills"; install_to "$HOME/.codex/skills" ;;
+  codex)      install_to "$HOME/.codex/skills"; strip_when_to_use "$HOME/.codex/skills" ;;
+  all)        install_to "$HOME/.dsh/skills"; install_to "$HOME/.kimi-code/skills"; install_to "$HOME/.codex/skills"; strip_when_to_use "$HOME/.codex/skills" ;;
   doubao)     : ;;
 esac
 
