@@ -27,6 +27,20 @@ cp -R session-observer ~/.codex/skills/session-observer
 cp -R context-handoff   ~/.codex/skills/context-handoff
 ```
 
+### 1.1 给技术小白的离线安装（绕过两个坑）
+
+让 **Codex agent 自己装**（在对话里说"帮我 clone 并运行脚本"）通常会撞上两个坑：
+
+1. **代理挡 GitHub**：`git clone` 连不上（国内环境常见）；
+2. **沙箱不让写 `~/.codex/`**：Codex 默认 `workspace-write` 沙箱，只能写当前工作区，写不到用户目录里的 `~/.codex/`。
+
+解法：**别让 agent 装，发一个离线 zip，双击 `install.command` 装**。脚本在 macOS Terminal 里由**用户本人**运行，不受 Codex 沙箱限制、也不联网。
+
+离线包 `session-guardian-codex.zip` 内含 `session-observer/` + `context-handoff/` + `install.command`，双击 `install.command` 即完成「复制技能到 `~/.codex/skills/` + 追加规则到 `~/.codex/rules/default.rules`」。
+
+> 仓库根目录的 `install-codex.command` 是「联网版」（从 GitHub 下载）；离线 zip 是「无网版」。GitHub 能访问用前者，被墙就用后者。离线 zip 可用
+> `zip -r session-guardian-codex.zip session-observer context-handoff install.command` 自行打包。
+
 ## 2. 常驻入口（规则）
 
 把 `rules.snippet.md` 的内容追加到 `~/.codex/rules/default.rules` 末尾。
