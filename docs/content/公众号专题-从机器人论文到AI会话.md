@@ -60,4 +60,4 @@ node ~/.dsh/skills/session-observer/scripts/check_session.mjs <你的会话>.zst
 
 输出里 `consecutiveContinue` 超过 3，就说明你的会话已经在「效能衰退」了。这不是玄学，是能从日志里数出来的。
 
-> 项目：session-guardian（GitHub 链接待补）· 论文：arXiv:2611.14488
+> 项目：session-guardian（https://github.com/tianxiaz/session-guardian）· 论文：arXiv:2611.14488
