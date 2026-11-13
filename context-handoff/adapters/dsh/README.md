@@ -140,3 +140,27 @@ DSH 的 hooks 桥支持 `Stop`。若把 `dsh-hooks-claude-code` 挂进 profile �
 ```
 注意桥会**忽略**配置里的 `PreCompact`/`PostCompact`（官方不支持清单里有），只生效
 `SessionStart`/`Stop` 等 7 个事件 —— 所以 DSH 侧**拿不到「压缩前」这一刻**。
+
+---
+
+## 定时提醒的导出 / 恢复（会话切换时防丢）
+
+DSH 的定时提醒（schedule）绑定在会话上：**归档旧会话 → 它的定时提醒被移除，不会自动恢复**。
+切换前先导出，再在新会话恢复。
+
+### 1. 旧会话导出（只读，安全）
+
+```bash
+node <技能目录>/scripts/schedule-export.mjs --session <旧会话id> --json > sched.json
+# 不带 --json：人类可读
+```
+
+### 2. 新会话恢复（二选一）
+
+- **A（推荐，安全）**：把 `sched.json` 贴进新会话，说「用 schedule_create 按这个重建」；
+- **B（实验性）**：`node <技能目录>/scripts/schedule-import.mjs --from sched.json --session <新会话id>`
+  （直接写 `~/.dsh/storages/schedule.json`，自动备份；DSH 可能需重启才读到）。
+
+### 3. 交接时别再漏
+
+HANDOFF 的 `environment.定时提醒` 子项是**必填**——交接前把挂着的定时提醒列进去，归档前就能先迁走。
