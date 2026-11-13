@@ -41,6 +41,7 @@ export const VALID_SECTIONS = Object.freeze({
     '- 服务：无',
     '- 命令：node --test "scripts/tests/*.test.mjs"',
     '- 依赖状态：node v22.19.0 可用；无第三方依赖',
+    '- 定时提醒：无',
     '',
   ].join('\n'),
   evidence: [

@@ -763,7 +763,7 @@ test('R3-D-1 致命：节体含行内代码（反引号）时 parseSections 的�
   // "只能 init、不能 update"。夹具此前不含反引号，所以 84 项全绿也没抓到。
   const text = validHandoff({
     sections: {
-      environment: '- 路径：/tmp\n- 服务：无\n- 命令：`cd /tmp && node x.mjs`\n- 依赖状态：`node` 可用\n',
+      environment: '- 路径：/tmp\n- 服务：无\n- 命令：`cd /tmp && node x.mjs`\n- 依赖状态：`node` 可用\n- 定时提醒：无\n',
       evidence: '- 提交：abc1234\n- 文件：`docs/x.md`（见 `:12`）\n- 实测数字：1\n',
     },
   });

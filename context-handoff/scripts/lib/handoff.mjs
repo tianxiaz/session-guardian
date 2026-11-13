@@ -30,6 +30,7 @@ export const SECTIONS = Object.freeze([
  * 的唯一防线。故补三项必含子项：
  *   decisions.尝试过     —— 试过什么、为什么不行（无则写「无」）
  *   environment.依赖状态 —— 外部依赖当前是否可用（无则写「无」）
+ *   environment.定时提醒 —— 本会话挂着的定时提醒/定时任务（kind/title/prompt/时间），归档会丢；无则写「无」
  *   status.恢复检查点    —— 交接基线的 commit 与工作树是否干净（"四问"的第 5 问靠它回答）
  */
 export const REQUIRED_ITEMS = Object.freeze({
@@ -38,7 +39,7 @@ export const REQUIRED_ITEMS = Object.freeze({
   decisions: ['决定', '理由', '已否决', '尝试过'],
   todo: ['待办'],
   boundaries: ['可改', '禁止', '归属未定'],
-  environment: ['路径', '服务', '命令', '依赖状态'],
+  environment: ['路径', '服务', '命令', '依赖状态', '定时提醒'],
   evidence: ['提交', '文件', '实测数字'],
   open_questions: ['待裁决'],
 });

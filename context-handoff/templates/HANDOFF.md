@@ -81,6 +81,7 @@ status:                  # draft | complete | blocked
 - 服务：
 - 命令：
 - 依赖状态：
+- 定时提醒：
 <!-- /handoff:section -->
 
 <!-- handoff:section id=evidence -->
